@@ -12,165 +12,91 @@
 
   <title>萬達員工打卡系統</title>
 
-
   <style>
 
     body {
-
       display: flex;
-
       justify-content: center;
-
       align-items: center;
-
       min-height: 100vh;
-
       margin: 0;
-
       font-family: Arial, sans-serif;
-
       background-color: #f5f5f5;
-
     }
-
 
     .container {
-
       width: 90%;
-
       max-width: 450px;
-
       text-align: center;
-
       background: #fff;
-
       padding: 30px;
-
       border-radius: 10px;
-
-      box-shadow:
-        0 0 10px rgba(0,0,0,0.1);
-
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
-
 
     input {
-
       padding: 10px;
-
       margin: 10px 0;
-
       width: 80%;
-
       border: 1px solid #ccc;
-
       border-radius: 5px;
-
       box-sizing: border-box;
-
       font-size: 16px;
-
     }
-
 
     .buttons button {
-
       margin: 10px 5px;
-
       padding: 10px 20px;
-
       border: none;
-
       background-color: #007bff;
-
       color: white;
-
       border-radius: 5px;
-
       cursor: pointer;
-
       font-size: 16px;
-
     }
-
 
     .buttons button:hover {
-
       background-color: #0056b3;
-
     }
-
 
     .buttons button:disabled {
-
       background-color: #999;
-
       cursor: not-allowed;
-
     }
-
 
     #locationStatus {
-
       margin: 15px 0;
-
       padding: 10px;
-
       border-radius: 5px;
-
       background-color: #f0f0f0;
-
       line-height: 1.6;
-
       word-break: break-word;
-
     }
-
 
     #record {
-
       margin-top: 15px;
-
       padding: 10px;
-
       text-align: left;
-
       background: #f8f8f8;
-
       border-radius: 5px;
-
       line-height: 1.7;
-
       word-break: break-word;
-
     }
-
 
     .success {
-
       color: green;
-
     }
-
 
     .error {
-
       color: red;
-
     }
-
 
     .warning {
-
       color: #d97706;
-
     }
 
-
     .loading {
-
       color: #555;
-
     }
 
   </style>
@@ -180,14 +106,9 @@
 
 <body>
 
-
   <div class="container">
 
-
-    <h1>員工打卡系統</h1>
-
-
-    <!-- 員工姓名 -->
+    <h1>萬達員工打卡系統</h1>
 
     <input
       type="text"
@@ -196,27 +117,13 @@
       autocomplete="name"
     >
 
-
-    <!-- 日期 -->
-
     <p id="date"></p>
-
-
-    <!-- 時間 -->
 
     <p id="time"></p>
 
-
-    <!-- GPS 狀態 -->
-
     <div id="locationStatus">
-
       正在取得定位...
-
     </div>
-
-
-    <!-- 打卡按鈕 -->
 
     <div class="buttons">
 
@@ -227,7 +134,6 @@
         上班打卡
       </button>
 
-
       <button
         id="clockOut"
         disabled
@@ -237,37 +143,23 @@
 
     </div>
 
-
     <h2>今日紀錄</h2>
 
-
     <div id="record">
-
       尚無打卡紀錄
-
     </div>
-
 
   </div>
 
 
   <script>
 
-
     // =====================================================
     // Google Apps Script 網址
     // =====================================================
-    //
-    // 把這裡換成你部署 Apps Script 後取得的網址
-    //
-    // 例如：
-    //
-    // https://script.google.com/macros/s/XXXXXXXX/exec
-    //
-    // =====================================================
 
     const APPS_SCRIPT_URL =
-      "https://script.google.com/macros/s/AKfycbyuQUlUQTVIGxIOt9hJw274zecVws_b7TxfokPe6sWQRyQXBtQwn1ivGhekLTGUeIU/exec";
+      "https://script.google.com/macros/s/AKfycbx3P1xFiJAGXUVI6wvvmYcaBOoInWRB4qnmklP1r3XVRmkZzY9-wY4AOBPEGqLPfFE/exec";
 
 
     // =====================================================
@@ -275,19 +167,14 @@
     // =====================================================
 
     const COMPANY_LATITUDE =
-      22.722048448654423;
-
+      22.721929694216037;
 
     const COMPANY_LONGITUDE =
-      120.30024030501782;
+      120.30024030275378;
 
 
     // =====================================================
-    // 前端顯示用的允許範圍
-    //
-    // 注意：
-    // 真正的安全驗證必須在 Apps Script 後端進行
-    //
+    // 公司允許打卡範圍
     // =====================================================
 
     const ALLOWED_RADIUS = 100;
@@ -307,26 +194,20 @@
     const employeeName =
       document.getElementById("employeeName");
 
-
     const dateElement =
       document.getElementById("date");
-
 
     const timeElement =
       document.getElementById("time");
 
-
     const locationStatus =
       document.getElementById("locationStatus");
-
 
     const clockInButton =
       document.getElementById("clockIn");
 
-
     const clockOutButton =
       document.getElementById("clockOut");
-
 
     const recordElement =
       document.getElementById("record");
@@ -340,11 +221,9 @@
 
       const now = new Date();
 
-
       dateElement.textContent =
         "日期：" +
         now.toLocaleDateString("zh-TW");
-
 
       timeElement.textContent =
         "時間：" +
@@ -360,7 +239,6 @@
 
     updateDateTime();
 
-
     setInterval(
       updateDateTime,
       1000
@@ -369,7 +247,6 @@
 
     // =====================================================
     // Haversine Formula
-    // 計算兩個 GPS 座標之間的距離
     // =====================================================
 
     function calculateDistance(
@@ -381,27 +258,21 @@
 
       const earthRadius = 6371000;
 
-
       const lat1Rad =
         lat1 * Math.PI / 180;
 
-
       const lat2Rad =
         lat2 * Math.PI / 180;
-
 
       const deltaLat =
         (lat2 - lat1) *
         Math.PI / 180;
 
-
       const deltaLon =
         (lon2 - lon1) *
         Math.PI / 180;
 
-
       const a =
-
         Math.sin(deltaLat / 2) *
         Math.sin(deltaLat / 2) +
 
@@ -411,15 +282,12 @@
         Math.sin(deltaLon / 2) *
         Math.sin(deltaLon / 2);
 
-
       const c =
-
         2 *
         Math.atan2(
           Math.sqrt(a),
           Math.sqrt(1 - a)
         );
-
 
       return earthRadius * c;
 
@@ -427,14 +295,13 @@
 
 
     // =====================================================
-    // 設定按鈕狀態
+    // 設定按鈕
     // =====================================================
 
     function setButtonsEnabled(enabled) {
 
       clockInButton.disabled =
         !enabled;
-
 
       clockOutButton.disabled =
         !enabled;
@@ -443,31 +310,23 @@
 
 
     // =====================================================
-    // 取得 GPS 定位
+    // 取得 GPS
     // =====================================================
 
     function getLocation() {
 
-
       setButtonsEnabled(false);
-
 
       currentLocation = null;
 
-
-      // -----------------------------------------------------
-      // 瀏覽器是否支援 GPS
-      // -----------------------------------------------------
 
       if (!navigator.geolocation) {
 
         locationStatus.textContent =
           "✕ 此瀏覽器不支援 GPS 定位功能";
 
-
         locationStatus.className =
           "error";
-
 
         return;
 
@@ -477,35 +336,23 @@
       locationStatus.textContent =
         "正在取得目前位置...";
 
-
       locationStatus.className =
         "loading";
 
-
-      // -----------------------------------------------------
-      // 開始取得 GPS
-      // -----------------------------------------------------
 
       navigator.geolocation.getCurrentPosition(
 
         function(position) {
 
-
           const latitude =
             position.coords.latitude;
-
 
           const longitude =
             position.coords.longitude;
 
-
           const accuracy =
             position.coords.accuracy;
 
-
-          // -------------------------------------------------
-          // 儲存目前位置
-          // -------------------------------------------------
 
           currentLocation = {
 
@@ -521,56 +368,33 @@
           };
 
 
-          // -------------------------------------------------
-          // 前端計算距離
-          //
-          // 主要是給使用者看
-          //
-          // 真正驗證會在後端重新做
-          // -------------------------------------------------
-
           const distance =
             calculateDistance(
 
               latitude,
-
               longitude,
 
               COMPANY_LATITUDE,
-
               COMPANY_LONGITUDE
 
             );
 
-
-          // -------------------------------------------------
-          // 顯示定位資訊
-          // -------------------------------------------------
 
           if (
             distance <=
             ALLOWED_RADIUS
           ) {
 
-
             locationStatus.innerHTML = `
 
               <span class="success">
-
                 ✓ 定位成功，可打卡
-
               </span>
 
               <br>
 
               距離公司：約
               ${Math.round(distance)}
-              公尺
-
-              <br>
-
-              定位誤差：約
-              ${Math.round(accuracy)}
               公尺
 
               <br>
@@ -585,23 +409,17 @@
 
             `;
 
-
             locationStatus.className =
               "success";
 
-
             setButtonsEnabled(true);
 
-
           } else {
-
 
             locationStatus.innerHTML = `
 
               <span class="error">
-
                 ✕ 不在公司打卡範圍內
-
               </span>
 
               <br>
@@ -624,10 +442,8 @@
 
             `;
 
-
             locationStatus.className =
               "error";
-
 
             setButtonsEnabled(false);
 
@@ -638,19 +454,13 @@
 
         function(error) {
 
-
-          currentLocation =
-            null;
-
+          currentLocation = null;
 
           setButtonsEnabled(false);
 
-
           let message = "";
 
-
           switch (error.code) {
-
 
             case error.PERMISSION_DENIED:
 
@@ -659,14 +469,12 @@
 
               break;
 
-
             case error.POSITION_UNAVAILABLE:
 
               message =
                 "目前無法取得位置";
 
               break;
-
 
             case error.TIMEOUT:
 
@@ -675,7 +483,6 @@
 
               break;
 
-
             default:
 
               message =
@@ -683,10 +490,8 @@
 
           }
 
-
           locationStatus.textContent =
             "✕ " + message;
-
 
           locationStatus.className =
             "error";
@@ -726,17 +531,11 @@
 
     async function clock(type) {
 
+      // ---------------------------------------------------
+      // 檢查網址
+      // ---------------------------------------------------
 
-      // -----------------------------------------------------
-      // 檢查 Apps Script URL
-      // -----------------------------------------------------
-
-      if (
-        !APPS_SCRIPT_URL ||
-        APPS_SCRIPT_URL.includes(
-          "請把這裡換成"
-        )
-      ) {
+      if (!APPS_SCRIPT_URL) {
 
         alert(
           "尚未設定 Google Apps Script 網址"
@@ -747,9 +546,9 @@
       }
 
 
-      // -----------------------------------------------------
+      // ---------------------------------------------------
       // 取得姓名
-      // -----------------------------------------------------
+      // ---------------------------------------------------
 
       const name =
         employeeName.value.trim();
@@ -768,9 +567,9 @@
       }
 
 
-      // -----------------------------------------------------
+      // ---------------------------------------------------
       // 檢查 GPS
-      // -----------------------------------------------------
+      // ---------------------------------------------------
 
       if (!currentLocation) {
 
@@ -778,72 +577,84 @@
           "尚未取得定位，請先允許瀏覽器使用定位功能"
         );
 
-
         refreshLocation();
-
 
         return;
 
       }
 
 
-      // -----------------------------------------------------
-      // 防止使用者連續按按鈕
-      // -----------------------------------------------------
+      // ---------------------------------------------------
+      // 暫時停用按鈕
+      // ---------------------------------------------------
 
       setButtonsEnabled(false);
 
-
       locationStatus.textContent =
         "正在送出打卡資料...";
-
 
       locationStatus.className =
         "loading";
 
 
-      // -----------------------------------------------------
-      // 取得目前 GPS
-      // -----------------------------------------------------
+      // ---------------------------------------------------
+      // GPS
+      // ---------------------------------------------------
 
       const latitude =
         currentLocation.latitude;
 
-
       const longitude =
         currentLocation.longitude;
-
 
       const accuracy =
         currentLocation.accuracy;
 
 
-      // -----------------------------------------------------
-      // 建立要傳給後端的資料
-      // -----------------------------------------------------
+      // ---------------------------------------------------
+      // 要傳送給 Apps Script 的資料
+      // ---------------------------------------------------
 
       const data = {
 
-      name: name,
+        name:
+          name,
 
-      type: type,
-      latitude: latitude,
-      longitude: longitude,
-      accuracy: accuracy,
-      clientDate: new Date().toLocaleDateString("zh-TW"),
-      clientTime: new Date().toLocaleTimeString("zh-TW", {
-      hour12: false
-      })
+        type:
+          type,
+
+        latitude:
+          latitude,
+
+        longitude:
+          longitude,
+
+        accuracy:
+          accuracy,
+
+        clientDate:
+          new Date().toLocaleDateString("zh-TW"),
+
+        clientTime:
+          new Date().toLocaleTimeString(
+            "zh-TW",
+            {
+              hour12: false
+            }
+          )
 
       };
 
 
       try {
 
-
-        // ---------------------------------------------------
-        // 傳送到 Google Apps Script
-        // ---------------------------------------------------
+        // -------------------------------------------------
+        // 傳送資料
+        //
+        // 注意：
+        // 使用 text/plain 可以避免部分瀏覽器
+        // CORS 預檢問題
+        // -------------------------------------------------
 
         const response =
           await fetch(
@@ -852,14 +663,14 @@
 
             {
 
-              method: "POST",
+              method:
+                "POST",
 
-              headers: {
-
-                "Content-Type":
-                  "text/plain;charset=utf-8"
-
-              },
+              headers:
+                {
+                  "Content-Type":
+                    "text/plain;charset=utf-8"
+                },
 
               body:
                 JSON.stringify(data)
@@ -869,20 +680,64 @@
           );
 
 
-        // ---------------------------------------------------
-        // 取得後端回應
-        // ---------------------------------------------------
+        // -------------------------------------------------
+        // 檢查 HTTP 狀態
+        // -------------------------------------------------
 
-        const result =
-          await response.json();
+        if (!response.ok) {
+
+          throw new Error(
+            "HTTP " +
+            response.status
+          );
+
+        }
 
 
-        // ---------------------------------------------------
+        // -------------------------------------------------
+        // 取得文字
+        // -------------------------------------------------
+
+        const responseText =
+          await response.text();
+
+
+        console.log(
+          "Apps Script 回應：",
+          responseText
+        );
+
+
+        // -------------------------------------------------
+        // 解析 JSON
+        // -------------------------------------------------
+
+        let result;
+
+        try {
+
+          result =
+            JSON.parse(responseText);
+
+        } catch (jsonError) {
+
+          console.error(
+            "Apps Script 回應不是 JSON：",
+            responseText
+          );
+
+          throw new Error(
+            "伺服器回應格式錯誤"
+          );
+
+        }
+
+
+        // -------------------------------------------------
         // 後端拒絕
-        // ---------------------------------------------------
+        // -------------------------------------------------
 
         if (!result.success) {
-
 
           alert(
             result.message ||
@@ -894,66 +749,70 @@
 
             <span class="error">
 
-              ${result.message || "打卡失敗"}
+              ${escapeHtml(
+                result.message ||
+                "打卡失敗"
+              )}
 
             </span>
 
           `;
 
+          recordElement.className =
+            "error";
 
-          // 重新定位
 
           refreshLocation();
-
 
           return;
 
         }
 
 
-        // ---------------------------------------------------
+        // =================================================
         // 打卡成功
-        // ---------------------------------------------------
+        // =================================================
 
         recordElement.innerHTML = `
 
           <strong>
-            ${escapeHtml(result.type || type)}
+            ${escapeHtml(
+              result.type || type
+            )}
           </strong>
 
           <br>
 
           員工：
-          ${escapeHtml(result.name || name)}
+          ${escapeHtml(
+            result.name || name
+          )}
+
+          <br>
+
+          日期：
+          ${escapeHtml(
+            result.date || ""
+          )}
 
           <br>
 
           時間：
-          ${escapeHtml(result.time || "")}
-
-          <br>
-
-          緯度：
-          ${Number(latitude).toFixed(6)}
-
-          <br>
-
-          經度：
-          ${Number(longitude).toFixed(6)}
+          ${escapeHtml(
+            result.time || ""
+          )}
 
           <br>
 
           距離公司：
-          約 ${Math.round(
+          約
+          ${Math.round(
             Number(result.distance || 0)
-          )} 公尺
+          )}
+          公尺
 
           <br>
 
-          定位誤差：
-          約 ${Math.round(
-            Number(accuracy || 0)
-          )} 公尺
 
         `;
 
@@ -964,15 +823,24 @@
 
         alert(
 
-          (result.message || type + "成功") +
+          (result.message ||
+            type + "成功") +
+
           "\n\n" +
 
           "員工：" +
           (result.name || name) +
+
+          "\n" +
+
+          "日期：" +
+          (result.date || "") +
+
           "\n" +
 
           "時間：" +
           (result.time || "") +
+
           "\n" +
 
           "距離公司：約 " +
@@ -984,15 +852,14 @@
         );
 
 
-        // ---------------------------------------------------
-        // 打卡成功後重新取得 GPS
-        // ---------------------------------------------------
+        // -------------------------------------------------
+        // 成功後重新取得 GPS
+        // -------------------------------------------------
 
         refreshLocation();
 
 
       } catch (error) {
-
 
         console.error(
           "打卡錯誤：",
@@ -1001,8 +868,16 @@
 
 
         alert(
+
           "無法連線到打卡伺服器。\n\n" +
-          "請確認網路連線以及 Apps Script 網址是否正確。"
+
+          "錯誤：" +
+          error.message +
+
+          "\n\n" +
+
+          "請確認 Apps Script 部署網址是否正確。"
+
         );
 
 
@@ -1011,6 +886,12 @@
           <span class="error">
 
             無法連線到打卡伺服器
+
+            <br><br>
+
+            ${escapeHtml(
+              error.message
+            )}
 
           </span>
 
@@ -1065,7 +946,7 @@
 
 
     // =====================================================
-    // 上班打卡按鈕
+    // 上班打卡
     // =====================================================
 
     clockInButton.addEventListener(
@@ -1079,7 +960,7 @@
 
 
     // =====================================================
-    // 下班打卡按鈕
+    // 下班打卡
     // =====================================================
 
     clockOutButton.addEventListener(
@@ -1098,9 +979,7 @@
 
     getLocation();
 
-
   </script>
-
 
 </body>
 

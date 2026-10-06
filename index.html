@@ -1242,31 +1242,18 @@
             // 打卡成功
             // =================================================
 
-            clockResult.innerHTML = `
+            locationStatus.innerHTML = `
 
-              <div class="result-title">
+              <span class="success">
 
                 ✓ ${escapeHtml(type)}成功
 
-              </div>
+              </span>
 
             `;
 
-
-            clockResult.style.visibility =
-              "visible";
-
-
-            // -------------------------------------------------
-            // 清除定位狀態
-            // -------------------------------------------------
-
-            locationStatus.innerHTML =
-              "";
-
             locationStatus.className =
-              "";
-
+              "success";
 
             // -------------------------------------------------
             // 恢復按鈕
